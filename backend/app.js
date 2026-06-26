@@ -177,8 +177,8 @@ app.post('/signup', async (req, res) => {
           res.cookie('authToken', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
-            sameSite: 'lax',
-            secure: false
+            sameSite: 'none',
+            secure: true
           });
           res.json({ success: true, message: 'تم إنشاء الحساب بنجاح' });
         }
@@ -216,8 +216,8 @@ if (/^\d+$/.test(onlyDigits)) {
     res.cookie('authToken', token, {
       httpOnly: true,
       maxAge: maxAge,
-      sameSite: 'lax',
-      secure: false
+      sameSite: 'none',
+      secure: true
     });
     res.json({ success: true });
   });
@@ -260,7 +260,7 @@ app.post('/google-auth', async (req, res) => {
       if (result.length > 0) {
         // مستخدم موجود -> لا نغير الصورة
         const jwtToken = jwt.sign({ user_id: result[0].user_id }, 'SECRET_KEY', { expiresIn: '1d' });
-        res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'lax', secure: false });
+        res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
         return res.json({ success: true, message: 'تم تسجيل الدخول' });
       } else {
         // مستخدم جديد -> إنشاء الحساب مع الصورة
@@ -281,7 +281,7 @@ app.post('/google-auth', async (req, res) => {
               if (err2) return res.status(500).json({ success: false, message: 'خطأ في قاعدة البيانات' });
 
               const jwtToken = jwt.sign({ user_id: userID }, 'SECRET_KEY', { expiresIn: '1d' });
-              res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'lax', secure: false });
+              res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
               return res.json({ success: true, message: 'تم إنشاء الحساب وتسجيل الدخول' });
             }
           );
@@ -320,7 +320,7 @@ app.post('/facebook-auth', async (req, res) => {
       if (result.length > 0) {
         // مستخدم موجود -> لا نغير الصورة
         const jwtToken = jwt.sign({ user_id: result[0].user_id }, 'SECRET_KEY', { expiresIn: '1d' });
-        res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'lax', secure: false });
+        res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
         return res.json({ success: true });
       } else {
         // مستخدم جديد -> إنشاء الحساب مع الصورة
@@ -341,7 +341,7 @@ app.post('/facebook-auth', async (req, res) => {
               if (err2) return res.json({ success: false });
 
               const jwtToken = jwt.sign({ user_id: userID }, 'SECRET_KEY', { expiresIn: '1d' });
-              res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'lax', secure: false });
+              res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
               return res.json({ success: true });
             }
           );
@@ -359,8 +359,8 @@ app.post('/logout', (req, res) => {
   res.cookie('authToken', '', {
     httpOnly: true,
     expires: new Date(0), // نجعل تاريخ الكوكي منتهي
-    sameSite: 'lax',
-    secure: false
+    sameSite: 'none',
+    secure: true
   });
   res.json({ success: true });
 });
@@ -557,6 +557,8 @@ app.use((req, res) => {
 });
 
 /* ===== SERVER ===== */
-app.listen(3000,() =>
-  console.log('Server running!')
-);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
