@@ -201,7 +201,7 @@ async function handleResend() {
 
   try {
     const email = document.getElementById("forgot-email").value.trim();
-    const sendResponse = await fetch("http://localhost:3000/send-code", {
+    const sendResponse = await fetch("https://fors4ty-github-io.onrender.com/send-code", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -373,7 +373,7 @@ if (loginValue.includes("@")) {
   showToast("جاري تسجيل الدخول...");
   // ===== Fetch Login =====
   try {
-    const response = await fetch('http://localhost:3000/login', {
+    const response = await fetch('https://fors4ty-github-io.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: "include",
@@ -427,7 +427,7 @@ signupForm.addEventListener("submit", async (e) => {
   showToast("جاري إنشاء الحساب...");
   // ===== Fetch Signup =====
   try {
-    const response = await fetch('http://localhost:3000/signup', {
+    const response = await fetch('https://fors4ty-github-io.onrender.com/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: "include",
@@ -436,7 +436,7 @@ signupForm.addEventListener("submit", async (e) => {
     const data = await response.json();
     if (data.success) {
   try {
-    const loginResponse = await fetch('http://localhost:3000/login', {
+    const loginResponse = await fetch('https://fors4ty-github-io.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ loginValue: email || phone, password })
@@ -522,7 +522,7 @@ forgotPasswordForm.addEventListener("submit", async (e) => {
     return;
   }
   try {
-    const sendResponse = await fetch("http://localhost:3000/send-code", {
+    const sendResponse = await fetch("https://fors4ty-github-io.onrender.com/send-code", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -542,7 +542,7 @@ forgotPasswordForm.addEventListener("submit", async (e) => {
         break;
       }
       const userCode = result.value.trim();
-      const verifyResponse = await fetch("http://localhost:3000/verify-code", {
+      const verifyResponse = await fetch("https://fors4ty-github-io.onrender.com/verify-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code: userCode }),
