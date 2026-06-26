@@ -1,4 +1,0 @@
-applyLanguage();
-hoverTooltip();
-checkAuthUI();
-lazy();
