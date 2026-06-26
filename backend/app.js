@@ -173,7 +173,7 @@ app.post('/signup', async (req, res) => {
         (err2) => {
           if (err2) return res.json({ success: false, message: 'خطأ أثناء إنشاء المستخدم' });
           // تسجيل الدخول تلقائي بعد الإنشاء
-          const token = jwt.sign({ user_id: userID }, 'SECRET_KEY', { expiresIn: '1d' });
+          const token = jwt.sign({ user_id: userID }, process.env.JWT_SECRET, { expiresIn: '1d' });
           res.cookie('authToken', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
@@ -212,7 +212,7 @@ if (/^\d+$/.test(onlyDigits)) {
     const user = result[0];
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.json({ success: false, message: 'كلمة المرور غير صحيحة' });
-    const token = jwt.sign({ user_id: user.user_id }, 'SECRET_KEY', { expiresIn });
+    const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, { expiresIn });
     res.cookie('authToken', token, {
       httpOnly: true,
       maxAge: maxAge,
@@ -259,7 +259,7 @@ app.post('/google-auth', async (req, res) => {
 
       if (result.length > 0) {
         // مستخدم موجود -> لا نغير الصورة
-        const jwtToken = jwt.sign({ user_id: result[0].user_id }, 'SECRET_KEY', { expiresIn: '1d' });
+        const jwtToken = jwt.sign({ user_id: result[0].user_id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
         return res.json({ success: true, message: 'تم تسجيل الدخول' });
       } else {
@@ -280,7 +280,7 @@ app.post('/google-auth', async (req, res) => {
             (err2) => {
               if (err2) return res.status(500).json({ success: false, message: 'خطأ في قاعدة البيانات' });
 
-              const jwtToken = jwt.sign({ user_id: userID }, 'SECRET_KEY', { expiresIn: '1d' });
+              const jwtToken = jwt.sign({ user_id: userID }, process.env.JWT_SECRET, { expiresIn: '1d' });
               res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
               return res.json({ success: true, message: 'تم إنشاء الحساب وتسجيل الدخول' });
             }
@@ -319,7 +319,7 @@ app.post('/facebook-auth', async (req, res) => {
 
       if (result.length > 0) {
         // مستخدم موجود -> لا نغير الصورة
-        const jwtToken = jwt.sign({ user_id: result[0].user_id }, 'SECRET_KEY', { expiresIn: '1d' });
+        const jwtToken = jwt.sign({ user_id: result[0].user_id }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
         return res.json({ success: true });
       } else {
@@ -340,7 +340,7 @@ app.post('/facebook-auth', async (req, res) => {
             (err2) => {
               if (err2) return res.json({ success: false });
 
-              const jwtToken = jwt.sign({ user_id: userID }, 'SECRET_KEY', { expiresIn: '1d' });
+              const jwtToken = jwt.sign({ user_id: userID }, process.env.JWT_SECRET, { expiresIn: '1d' });
               res.cookie('authToken', jwtToken, { httpOnly: true, sameSite: 'none', secure: true });
               return res.json({ success: true });
             }
