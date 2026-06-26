@@ -1,13 +1,13 @@
-// auth.js
 const jwt = require('jsonwebtoken');
 const db = require('./db');
 
-async function checkAuth(req, db) {
+async function checkAuth(req) {
   try {
-    const token = req.cookies?.authToken; // قراءة الكوكي
+    const token = req.cookies?.authToken;
     if (!token) return null;
 
-    const decoded = jwt.verify(token, 'SECRET_KEY'); // ضع مفتاحك
+    // استخدام JWT_SECRET من Render
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.user_id;
 
     return new Promise((resolve) => {
@@ -15,20 +15,20 @@ async function checkAuth(req, db) {
         'SELECT name, email, phone, user_id, avatar FROM users WHERE user_id = ?',
         [userId],
         (err, result) => {
-          if (err) return resolve(null);
-          if (result.length === 0) return resolve(null);
+          if (err || result.length === 0) return resolve(null);
 
           const user = result[0];
 
-          // إذا كانت صورة، أضف مسار كامل للوصول من المتصفح
+          // تعديل مسار الصورة
           if (user.avatar && !user.avatar.startsWith('fa-')) {
-            user.avatar = '/' + user.avatar; // لأنك تستخدم: app.use('/uploads', express.static('uploads'))
+            user.avatar = '/' + user.avatar;
           }
 
           resolve(user);
         }
       );
     });
+
   } catch (err) {
     return null;
   }
